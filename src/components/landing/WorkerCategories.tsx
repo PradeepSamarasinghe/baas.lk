@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, useState } from "react";
 import { Wrench, Zap, Droplets, PaintBucket, Hammer, Flame, ArrowRight } from "lucide-react";
 

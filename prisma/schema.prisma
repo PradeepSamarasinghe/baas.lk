@@ -164,3 +164,13 @@ model Review {
   
   createdAt     DateTime        @default(now())
 }
+
+model OtpRecord {
+  id          String   @id @default(uuid())
+  phoneNumber String
+  code        String
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+
+  @@index([phoneNumber])
+}

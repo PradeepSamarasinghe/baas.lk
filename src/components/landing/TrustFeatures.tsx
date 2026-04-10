@@ -1,3 +1,5 @@
+"use client";
+
 import { Shield, Camera, FileCheck, BadgeCheck, MessageSquareWarning, Star } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 

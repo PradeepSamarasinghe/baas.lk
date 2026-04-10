@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, useState } from "react";
 import { Star, BadgeCheck, MapPin, Briefcase } from "lucide-react";
 

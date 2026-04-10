@@ -1,5 +1,8 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { ArrowRight, BadgeCheck, Shield, Star } from "lucide-react";
+import Image from "next/image";
 import heroImage from "@/assets/hero-workers.jpg";
 
 const Hero = () => (
@@ -51,12 +54,13 @@ const Hero = () => (
 
         <div className="relative hidden lg:block animate-fade-in" style={{ animationDelay: "0.3s" }}>
           <div className="relative rounded-3xl overflow-hidden shadow-[var(--shadow-xl)]">
-            <img
+            <Image
               src={heroImage}
               alt="Verified construction workers on Baas.lk platform"
               width={1280}
               height={720}
               className="w-full h-auto object-cover"
+              priority
             />
             <div className="absolute inset-0 bg-gradient-to-t from-primary/50 via-primary/10 to-transparent" />
           </div>

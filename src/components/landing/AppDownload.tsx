@@ -1,5 +1,8 @@
+"use client";
+
 import { useEffect, useRef, useState } from "react";
 import { Apple, Play } from "lucide-react";
+import Image from "next/image";
 import appMockup from "@/assets/app-mockup.png";
 
 const AppDownload = () => {
@@ -62,11 +65,11 @@ const AppDownload = () => {
           {/* Phone mockup */}
           <div className="relative z-10 flex-shrink-0">
             <div className="relative w-56 md:w-64">
-              <img
+              <Image
                 src={appMockup}
                 alt="Baas.lk mobile app preview"
                 className="w-full h-auto drop-shadow-2xl animate-float"
-                loading="lazy"
+                priority
               />
               <div className="absolute inset-0 -z-10 scale-90 blur-3xl bg-secondary/15 rounded-full" />
             </div>
