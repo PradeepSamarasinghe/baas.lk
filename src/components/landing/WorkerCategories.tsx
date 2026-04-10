@@ -43,9 +43,8 @@ const WorkerCategories = () => {
             return (
               <div
                 key={cat.name}
-                className={`group relative bg-card rounded-2xl p-6 border border-border shadow-card hover:border-secondary/40 transition-all duration-500 cursor-pointer hover:shadow-[var(--shadow-lg)] hover:-translate-y-1.5 ${
-                  visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-                }`}
+                className={`group relative bg-card rounded-2xl p-6 border border-border shadow-card hover:border-secondary/40 transition-all duration-500 cursor-pointer hover:shadow-[var(--shadow-lg)] hover:-translate-y-1.5 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                  }`}
                 style={{ transitionDelay: `${i * 80}ms` }}
               >
                 <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${cat.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>

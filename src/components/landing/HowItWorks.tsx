@@ -19,9 +19,8 @@ const StepCard = ({ step, index, visible }: { step: typeof customerSteps[0]; ind
   const Icon = step.icon;
   return (
     <div
-      className={`relative flex flex-col items-center text-center transition-all duration-700 ${
-        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-      }`}
+      className={`relative flex flex-col items-center text-center transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        }`}
       style={{ transitionDelay: `${index * 150}ms` }}
     >
       {/* Step number */}
@@ -79,11 +78,10 @@ const HowItWorks = () => {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${
-                  activeTab === tab
-                    ? "bg-card text-foreground shadow-[var(--shadow-md)]"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
+                className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${activeTab === tab
+                  ? "bg-card text-foreground shadow-[var(--shadow-md)]"
+                  : "text-muted-foreground hover:text-foreground"
+                  }`}
               >
                 {tab === "customer" ? "I Need Workers" : "I'm a Worker"}
               </button>
