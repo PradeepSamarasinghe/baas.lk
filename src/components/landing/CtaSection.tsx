@@ -15,9 +15,8 @@ const CtaSection = () => {
       </div>
       <div className="container mx-auto px-4 relative z-10">
         <div
-          className={`max-w-2xl mx-auto text-center transition-all duration-700 ${
-            inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+          className={`max-w-2xl mx-auto text-center transition-all duration-700 ${inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
         >
           <h2 className="font-display text-3xl md:text-5xl font-extrabold text-primary-foreground mb-6 leading-tight tracking-tight">
             Ready to Build<br />Something Great?
@@ -29,7 +28,7 @@ const CtaSection = () => {
             <Button size="lg" className="bg-gradient-accent text-accent-foreground font-bold text-base shadow-glow animate-pulse-glow hover:opacity-90 transition-all px-8 h-12">
               Find a Worker <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
-            <Button size="lg" variant="outline" className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 font-bold text-base px-8 h-12">
+            <Button size="lg" variant="outline" className="border-primary-foreground/20 text-bg-primary-foreground hover:bg-primary-foreground/10 font-bold text-base px-8 h-12">
               Join as a Worker
             </Button>
           </div>

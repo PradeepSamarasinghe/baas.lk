@@ -19,9 +19,8 @@ const AppDownload = () => {
     <section className="section-padding overflow-hidden" ref={ref}>
       <div className="container mx-auto px-4">
         <div
-          className={`relative rounded-3xl bg-gradient-hero p-8 md:p-16 flex flex-col md:flex-row items-center gap-12 transition-all duration-700 ${
-            visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+          className={`relative rounded-3xl bg-gradient-hero p-8 md:p-16 flex flex-col md:flex-row items-center gap-12 transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
         >
           {/* Decorative glow */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-secondary/8 blur-[140px] pointer-events-none" />
@@ -69,7 +68,7 @@ const AppDownload = () => {
                 src={appMockup}
                 alt="Baas.lk mobile app preview"
                 className="w-full h-auto drop-shadow-2xl animate-float"
-                priority
+                loading="lazy"
               />
               <div className="absolute inset-0 -z-10 scale-90 blur-3xl bg-secondary/15 rounded-full" />
             </div>

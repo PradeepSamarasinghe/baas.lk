@@ -33,7 +33,7 @@ const Hero = () => (
             <Button size="lg" className="bg-gradient-accent text-accent-foreground font-bold text-base shadow-glow animate-pulse-glow hover:opacity-90 transition-all px-8 h-12">
               Find a Worker <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
-            <Button size="lg" variant="outline" className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10 font-bold text-base px-8 h-12">
+            <Button size="lg" variant="outline" className="border-primary-foreground/20 text-bg-primary-foreground hover:bg-primary-foreground/10 font-bold text-base px-8 h-12">
               Join as a Worker
             </Button>
           </div>

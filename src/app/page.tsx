@@ -1,3 +1,4 @@
+// Force re-scan
 import Navbar from "@/components/landing/Navbar";
 import Hero from "@/components/landing/Hero";
 import Stats from "@/components/landing/Stats";
@@ -18,13 +19,13 @@ export default function Home() {
       <Navbar />
       <main className="flex-grow">
         <Hero />
-        <Stats />
-        <WorkerCategories />
         <HowItWorks />
+        <WorkerCategories />
         <FeaturedWorkers />
         <TrustFeatures />
-        <AppDownload />
+        <Stats />
         <Testimonials />
+        <AppDownload />
         <Faq />
         <CtaSection />
       </main>
