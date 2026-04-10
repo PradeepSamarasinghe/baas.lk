@@ -63,22 +63,22 @@ const Faq = () => {
   }, []);
 
   return (
-    <section className="section-padding bg-muted/30" ref={ref}>
+    <section id="faq" className="py-20 md:py-28 bg-[#F7F8FA]" ref={ref}>
       <div className="container mx-auto px-4">
-        <div className="section-header">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-secondary/10 text-secondary text-xs font-semibold uppercase tracking-wider mb-4">
+        <div className="section-header max-w-2xl mx-auto mb-16">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-[#F59E0B]/10 text-[#D97706] text-xs font-bold uppercase tracking-[0.15em] mb-4">
             FAQ
           </span>
-          <h2 className="font-display text-3xl md:text-4xl lg:text-[2.75rem] font-extrabold text-foreground mb-4">
+          <h2 className="text-3xl md:text-5xl font-extrabold text-[#102241] mb-5 tracking-tight">
             Common Questions
           </h2>
-          <p className="text-muted-foreground max-w-lg mx-auto text-base">
+          <p className="text-gray-500 text-lg leading-relaxed">
             Everything you need to know about hiring and working on Baas.lk.
           </p>
         </div>
 
         <div
-          className={`max-w-2xl mx-auto flex flex-col gap-3 transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+          className={`max-w-2xl mx-auto flex flex-col gap-4 transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
         >
           {faqs.map((faq, i) => (
             <FaqItem

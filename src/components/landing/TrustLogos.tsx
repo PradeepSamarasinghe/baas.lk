@@ -29,9 +29,8 @@ const TrustLogos = () => {
           Trusted by industry associations & certification bodies
         </p>
         <div
-          className={`flex flex-wrap items-center justify-center gap-4 md:gap-6 transition-all duration-700 ${
-            visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-          }`}
+          className={`flex flex-wrap items-center justify-center gap-4 md:gap-6 transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            }`}
         >
           {partners.map((p, i) => (
             <div

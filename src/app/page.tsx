@@ -19,13 +19,13 @@ export default function Home() {
       <Navbar />
       <main className="flex-grow">
         <Hero />
-        <Stats />
-        <WorkerCategories />
         <HowItWorks />
+        <WorkerCategories />
         <FeaturedWorkers />
         <TrustFeatures />
-        <AppDownload />
+        <Stats />
         <Testimonials />
+        <AppDownload />
         <Faq />
         <CtaSection />
       </main>
