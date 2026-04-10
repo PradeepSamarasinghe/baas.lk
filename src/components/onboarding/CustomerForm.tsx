@@ -62,8 +62,8 @@ export function CustomerForm() {
         <form onSubmit={onSubmit} className="space-y-8">
           <div className="space-y-4">
             <Label>Account Type</Label>
-            <RadioGroup 
-              defaultValue="HOMEOWNER" 
+            <RadioGroup
+              defaultValue="HOMEOWNER"
               onValueChange={(v) => setFormData({ ...formData, type: v })}
               className="grid grid-cols-2 gap-4"
             >
@@ -104,8 +104,8 @@ export function CustomerForm() {
             </Select>
           </div>
 
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             className="w-full bg-gradient-to-r from-orange-600 to-rose-600 hover:from-orange-700 hover:to-rose-700 text-white shadow-lg shadow-orange-500/20"
             disabled={loading}
           >
