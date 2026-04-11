@@ -21,7 +21,7 @@ export default function Home() {
         <Hero />
         <HowItWorks />
         <WorkerCategories />
-        <FeaturedWorkers />
+        {/* <FeaturedWorkers /> */}
         <TrustFeatures />
         <Stats />
         <Testimonials />
