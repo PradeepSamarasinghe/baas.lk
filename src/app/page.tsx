@@ -25,7 +25,7 @@ export default function Home() {
         <TrustFeatures />
         <Stats />
         <Testimonials />
-        <AppDownload />
+        {/* <AppDownload /> */}
         <Faq />
         <CtaSection />
       </main>

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap');
 
 @import "tailwindcss";
 
@@ -35,17 +35,17 @@
     --popover: 0 0% 100%;
     --popover-foreground: 220 30% 12%;
 
-    --primary: 220 65% 18%;
-    --primary-foreground: 40 100% 97%;
+    --primary: 166 39% 17%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 38 92% 50%;
-    --secondary-foreground: 220 65% 12%;
+    --secondary: 71 77% 57%;
+    --secondary-foreground: 166 39% 10%;
 
     --muted: 215 20% 94%;
     --muted-foreground: 215 16% 47%;
 
-    --accent: 38 92% 50%;
-    --accent-foreground: 220 65% 12%;
+    --accent: 71 77% 57%;
+    --accent-foreground: 166 39% 10%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
@@ -55,15 +55,15 @@
 
     --border: 214 25% 92%;
     --input: 214 25% 90%;
-    --ring: 220 65% 18%;
+    --ring: 166 39% 17%;
 
     --radius: 0.75rem;
 
-    --gradient-primary: linear-gradient(135deg, hsl(220, 65%, 18%), hsl(220, 55%, 30%));
-    --gradient-accent: linear-gradient(135deg, hsl(38, 92%, 50%), hsl(28, 95%, 55%));
-    --gradient-hero: linear-gradient(160deg, hsl(220, 65%, 10%), hsl(220, 55%, 20%), hsl(218, 50%, 26%));
+    --gradient-primary: linear-gradient(135deg, hsl(166, 39%, 17%), hsl(166, 39%, 25%));
+    --gradient-accent: linear-gradient(135deg, hsl(71, 77%, 57%), hsl(71, 80%, 45%));
+    --gradient-hero: linear-gradient(160deg, hsl(166, 39%, 17%), hsl(166, 45%, 15%), hsl(166, 50%, 12%));
     --gradient-trust: linear-gradient(135deg, hsl(152, 60%, 38%), hsl(170, 55%, 42%));
-    --gradient-warm: linear-gradient(135deg, hsl(38, 92%, 50%), hsl(20, 90%, 55%));
+    --gradient-warm: linear-gradient(135deg, hsl(71, 77%, 57%), hsl(80, 80%, 50%));
     --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.06));
     --gradient-subtle: linear-gradient(180deg, hsl(210, 20%, 98%), hsl(215, 20%, 95%));
 
@@ -136,13 +136,14 @@
   h4,
   h5,
   h6 {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    letter-spacing: -0.02em;
+    font-family: 'Oswald', sans-serif;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
   }
 
   ::selection {
-    background: hsl(38 92% 50% / 0.2);
-    color: hsl(220 65% 12%);
+    background: hsl(71 77% 57% / 0.3);
+    color: hsl(166 39% 10%);
   }
 }
 
