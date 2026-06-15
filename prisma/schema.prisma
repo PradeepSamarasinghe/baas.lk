@@ -8,36 +8,19 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+// ─── ENUMS ───────────────────────────────────────────────────────────────────
+
 enum Role {
   CUSTOMER
   WORKER
   ADMIN
+  CONTRACTOR
 }
 
-enum UserType {
-  HOMEOWNER
-  SME
-}
-
-enum JobStatus {
-  OPEN
-  ASSIGNED
-  IN_PROGRESS
-  COMPLETED
-  CANCELLED
-}
-
-enum QuoteStatus {
+enum UserStatus {
+  ACTIVE
   PENDING
-  ACCEPTED
-  REJECTED
-}
-
-enum MilestoneStatus {
-  PENDING
-  SUBMITTED
-  APPROVED
-  PAID
+  SUSPENDED
 }
 
 enum VerificationStatus {
@@ -47,123 +30,455 @@ enum VerificationStatus {
   REJECTED
 }
 
-model User {
-  id            String    @id @default(uuid())
-  phoneNumber   String    @unique
-  role          Role?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+enum CustomerType {
+  HOMEOWNER
+  SME
+  CONTRACTOR
+}
 
-  workerProfile    WorkerProfile?
-  customerProfile  CustomerProfile?
+enum SkillLevel {
+  JUNIOR
+  MID
+  SENIOR
+}
+
+enum JobStatus {
+  OPEN
+  QUOTED
+  ASSIGNED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  DISPUTED
+}
+
+enum QuoteStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
+}
+
+enum JobAssignmentStatus {
+  ASSIGNED
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum MilestoneStatus {
+  PENDING
+  FUNDED
+  IN_PROGRESS
+  SUBMITTED
+  APPROVED
+  RELEASED
+  DISPUTED
+}
+
+enum TransactionType {
+  DEPOSIT
+  HOLD
+  RELEASE
+  REFUND
+  FEE
+  PAYOUT
+}
+
+enum TransactionStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum DisputeStatus {
+  OPEN
+  UNDER_REVIEW
+  RESOLVED
+  REJECTED
+}
+
+enum NotificationStatus {
+  QUEUED
+  SENT
+  FAILED
+  READ
+}
+
+enum FraudSeverity {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum Language {
+  EN
+  SI
+  TA
+}
+
+// ─── MODELS ──────────────────────────────────────────────────────────────────
+
+model User {
+  id                String      @id @default(uuid())
+  role              Role?
+  fullName          String?
+  phone             String      @unique
+  email             String?
+  passwordHash      String?
+  preferredLanguage Language    @default(EN)
+  status            UserStatus  @default(PENDING)
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  workerProfile     WorkerProfile?
+  customerProfile   CustomerProfile?
+  
+  // Relations
+  uploadedMedia          JobMedia[]
+  submittedMilestones    MilestoneSubmission[]
+  walletAccount          WalletAccount?
+  disputesRaised         Dispute[]
+  documentsReviewed      DocumentVerificationLog[]
+  notifications          Notification[]
+  fraudFlags             FraudFlag[]
+  
+  // Reverse relations for Jobs and Quotes
+  quotesSubmitted        Quote[]
+  assignedJobs           JobAssignment[]
 }
 
 model WorkerProfile {
-  id            String             @id @default(uuid())
-  userId        String             @unique
-  user          User               @relation(fields: [userId], references: [id])
+  id                 String             @id @default(uuid())
+  userId             String             @unique
+  user               User               @relation(fields: [userId], references: [id])
   
-  trade         String[]
-  district      String
-  baseRate      Decimal?
-  experience    String?
+  bio                String?
+  yearsExperience    Int?
+  baseDailyRate      Decimal?           @db.Decimal(10,2)
+  verificationStatus VerificationStatus @default(UNVERIFIED)
+  nicNumber          String?
+  selfieUrl          String?
+  profilePhotoUrl    String?
+  avgRating          Decimal            @default(0) @db.Decimal(3,2)
+  totalReviews       Int                @default(0)
+  jobsCompleted      Int                @default(0)
   
-  status        VerificationStatus @default(UNVERIFIED)
-  nicUrl        String?
-  selfieUrl     String?
-  certificates  String[]
+  districtId         Int?
+  district           District?          @relation(fields: [districtId], references: [id])
+  latitude           Decimal?           @db.Decimal(10,7)
+  longitude          Decimal?           @db.Decimal(10,7)
+  isAvailable        Boolean            @default(true)
   
-  quotes        Quote[]
-  reviews       Review[]
-  
-  createdAt     DateTime           @default(now())
-  updatedAt     DateTime           @updatedAt
+  trades             WorkerTrade[]
+  serviceAreas       WorkerServiceArea[]
+  certifications     Certification[]
+  reviews            Review[]           @relation("WorkerReviews")
+  documentsLogs      DocumentVerificationLog[]
+
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
 }
 
 model CustomerProfile {
-  id            String    @id @default(uuid())
-  userId        String    @unique
-  user          User      @relation(fields: [userId], references: [id])
+  id              String       @id @default(uuid())
+  userId          String       @unique
+  user            User         @relation(fields: [userId], references: [id])
   
-  type          UserType  @default(HOMEOWNER)
-  district      String?
+  customerType    CustomerType @default(HOMEOWNER)
+  companyName     String?
+  address         String?
   
-  jobs          Job[]
-  reviews       Review[]
+  districtId      Int?
+  district        District?    @relation(fields: [districtId], references: [id])
   
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  jobs            Job[]
+  reviews         Review[]     @relation("CustomerReviews")
+
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+}
+
+model Trade {
+  id           Int           @id @default(autoincrement())
+  name         String
+  category     String
+  isActive     Boolean       @default(true)
+  
+  workerTrades WorkerTrade[]
+  jobs         Job[]
+}
+
+model WorkerTrade {
+  id               String        @id @default(uuid())
+  workerProfileId  String
+  workerProfile    WorkerProfile @relation(fields: [workerProfileId], references: [id], onDelete: Cascade)
+  tradeId          Int
+  trade            Trade         @relation(fields: [tradeId], references: [id])
+  skillLevel       SkillLevel?
+  yearsExperience  Int?
+  
+  @@unique([workerProfileId, tradeId])
+}
+
+// Note: Initially targeting Western Province as per PRD comment.
+model District {
+  id                   Int                  @id @default(autoincrement())
+  name                 String
+  province             String               // e.g., "Western Province"
+  
+  workers              WorkerProfile[]
+  customers            CustomerProfile[]
+  workerServiceAreas   WorkerServiceArea[]
+  jobs                 Job[]
+}
+
+model WorkerServiceArea {
+  id               String        @id @default(uuid())
+  workerProfileId  String
+  workerProfile    WorkerProfile @relation(fields: [workerProfileId], references: [id], onDelete: Cascade)
+  districtId       Int
+  district         District      @relation(fields: [districtId], references: [id])
+  city             String?
+  radiusKm         Int?
+  
+  @@unique([workerProfileId, districtId])
+}
+
+model Certification {
+  id                 String             @id @default(uuid())
+  workerProfileId    String
+  workerProfile      WorkerProfile      @relation(fields: [workerProfileId], references: [id], onDelete: Cascade)
+  certificateType    String             // e.g., NVQ, CIDA
+  certificateNumber  String?
+  issuerName         String
+  issueDate          DateTime?
+  expiryDate         DateTime?
+  documentUrl        String
+  verificationStatus VerificationStatus @default(PENDING)
 }
 
 model Job {
-  id            String      @id @default(uuid())
-  customerId    String
-  customer      CustomerProfile @relation(fields: [customerId], references: [id])
+  id              String      @id @default(uuid())
+  customerId      String
+  customer        CustomerProfile @relation(fields: [customerId], references: [userId])
   
-  trade         String
-  description   String
-  budget        Decimal?
-  district      String
-  location      String?     // Can be lat/long string or address
+  title           String
+  description     String
   
-  status        JobStatus   @default(OPEN)
+  tradeId         Int
+  trade           Trade       @relation(fields: [tradeId], references: [id])
   
-  quotes        Quote[]
-  milestones    Milestone[]
-  review        Review?
+  districtId      Int
+  district        District    @relation(fields: [districtId], references: [id])
   
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  address         String?
+  latitude        Decimal?    @db.Decimal(10,7)
+  longitude       Decimal?    @db.Decimal(10,7)
+  budgetMin       Decimal?    @db.Decimal(10,2)
+  budgetMax       Decimal?    @db.Decimal(10,2)
+  startDate       DateTime?
+  urgency         String?     // normal, urgent
+  status          JobStatus   @default(OPEN)
+  
+  media           JobMedia[]
+  quotes          Quote[]
+  assignments     JobAssignment[]
+  reviews         Review[]
+  fraudFlags      FraudFlag[]
+
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+model JobMedia {
+  id          String   @id @default(uuid())
+  jobId       String
+  job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  mediaType   String   // image, video, document
+  mediaUrl    String
+  uploadedById String
+  uploadedBy  User     @relation(fields: [uploadedById], references: [id])
+  createdAt   DateTime @default(now())
 }
 
 model Quote {
-  id            String      @id @default(uuid())
-  jobId         String
-  job           Job         @relation(fields: [jobId], references: [id])
+  id              String        @id @default(uuid())
+  jobId           String
+  job             Job           @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  workerId        String
+  worker          User          @relation(fields: [workerId], references: [id])
   
-  workerId      String
-  worker        WorkerProfile @relation(fields: [workerId], references: [id])
+  price           Decimal       @db.Decimal(10,2)
+  estimatedDays   Int?
+  message         String?
+  status          QuoteStatus   @default(PENDING)
   
-  amount        Decimal
-  description   String?
-  status        QuoteStatus @default(PENDING)
-  
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  assignments     JobAssignment[]
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
 
   @@unique([jobId, workerId])
 }
 
+model JobAssignment {
+  id              String              @id @default(uuid())
+  jobId           String
+  job             Job                 @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  workerId        String
+  worker          User                @relation(fields: [workerId], references: [id])
+  quoteId         String
+  quote           Quote               @relation(fields: [quoteId], references: [id])
+  
+  agreedPrice     Decimal             @db.Decimal(10,2)
+  startDate       DateTime?
+  expectedEndDate DateTime?
+  status          JobAssignmentStatus @default(ASSIGNED)
+  
+  milestones      Milestone[]
+
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+}
+
 model Milestone {
-  id            String          @id @default(uuid())
-  jobId         String
-  job           Job             @relation(fields: [jobId], references: [id])
+  id                String              @id @default(uuid())
+  jobAssignmentId   String
+  jobAssignment     JobAssignment       @relation(fields: [jobAssignmentId], references: [id], onDelete: Cascade)
+  title             String
+  description       String?
+  amount            Decimal             @db.Decimal(10,2)
+  sequenceNo        Int
+  status            MilestoneStatus     @default(PENDING)
+  dueDate           DateTime?
   
-  title         String
-  amount        Decimal
-  status        MilestoneStatus @default(PENDING)
-  proofUrl      String?
-  order         Int
+  submissions       MilestoneSubmission[]
+  disputes          Dispute[]
+
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+}
+
+model MilestoneSubmission {
+  id            String             @id @default(uuid())
+  milestoneId   String
+  milestone     Milestone          @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+  submittedById String
+  submittedBy   User               @relation(fields: [submittedById], references: [id])
+  notes         String?
+  submittedAt   DateTime           @default(now())
   
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  media         SubmissionMedia[]
+}
+
+model SubmissionMedia {
+  id            String              @id @default(uuid())
+  submissionId  String
+  submission    MilestoneSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  mediaUrl      String
+  mediaType     String              // image, video
 }
 
 model Review {
   id            String          @id @default(uuid())
-  jobId         String          @unique
-  job           Job             @relation(fields: [jobId], references: [id])
-  
-  workerId      String
-  worker        WorkerProfile   @relation(fields: [workerId], references: [id])
-  
+  jobId         String
+  job           Job             @relation(fields: [jobId], references: [id], onDelete: Cascade)
   customerId    String
-  customer      CustomerProfile @relation(fields: [customerId], references: [id])
+  customer      CustomerProfile @relation("CustomerReviews", fields: [customerId], references: [userId])
+  workerId      String
+  worker        WorkerProfile   @relation("WorkerReviews", fields: [workerId], references: [userId])
   
   rating        Int
-  comment       String?
+  reviewText    String?
+  onTime        Boolean?
+  qualityGood   Boolean?
+  fairPrice     Boolean?
+  goodComm      Boolean?
   
   createdAt     DateTime        @default(now())
+  
+  @@unique([jobId, customerId, workerId])
+}
+
+model WalletAccount {
+  id            String              @id @default(uuid())
+  userId        String              @unique
+  user          User                @relation(fields: [userId], references: [id])
+  balance       Decimal             @default(0) @db.Decimal(12,2)
+  currency      String              @default("LKR")
+  status        String              @default("ACTIVE")
+  
+  transactions  WalletTransaction[]
+
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+}
+
+model WalletTransaction {
+  id              String          @id @default(uuid())
+  walletAccountId String
+  walletAccount   WalletAccount   @relation(fields: [walletAccountId], references: [id], onDelete: Cascade)
+  transactionType TransactionType
+  referenceType   String          // milestone, job, manual
+  referenceId     String?
+  amount          Decimal         @db.Decimal(12,2)
+  status          TransactionStatus @default(PENDING)
+  
+  createdAt       DateTime        @default(now())
+}
+
+model Dispute {
+  id              String        @id @default(uuid())
+  jobId           String?
+  milestoneId     String?
+  milestone       Milestone?    @relation(fields: [milestoneId], references: [id])
+  raisedById      String
+  raisedBy        User          @relation(fields: [raisedById], references: [id])
+  reason          String
+  status          DisputeStatus @default(OPEN)
+  resolutionNotes String?
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model DocumentVerificationLog {
+  id              String        @id @default(uuid())
+  workerProfileId String
+  workerProfile   WorkerProfile @relation(fields: [workerProfileId], references: [id], onDelete: Cascade)
+  documentType    String        // NIC, Selfie, Cert
+  reviewedById    String
+  reviewedBy      User          @relation(fields: [reviewedById], references: [id])
+  decision        String        // APPROVED, REJECTED
+  notes           String?
+  
+  createdAt       DateTime      @default(now())
+}
+
+model Notification {
+  id        String             @id @default(uuid())
+  userId    String
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  channel   String             // sms, whatsapp, push, email
+  title     String
+  message   String
+  status    NotificationStatus @default(QUEUED)
+  
+  createdAt DateTime           @default(now())
+}
+
+model FraudFlag {
+  id        String        @id @default(uuid())
+  userId    String
+  user      User          @relation(fields: [userId], references: [id])
+  jobId     String?
+  job       Job?          @relation(fields: [jobId], references: [id])
+  flagType  String        // fake_doc, no_show, payment_issue, abuse
+  severity  FraudSeverity @default(MEDIUM)
+  notes     String?
+  
+  createdAt DateTime      @default(now())
 }
 
 model OtpRecord {
